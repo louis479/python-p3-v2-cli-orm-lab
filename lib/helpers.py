@@ -68,28 +68,119 @@ def delete_department():
 # You'll implement the employee functions in the lab
 
 def list_employees():
-    pass
+    employees = Employee.get_all()
+    for emp in employees:
+        print(emp)
 
 
 def find_employee_by_name():
-    pass
+    name = input("Enter the employee's name: ").strip()
+    employee = Employee.find_by_name(name)
+    
+    if employee:
+        print(employee)
+    else:
+        print(f"Employee {name} not found")
+
 
 
 def find_employee_by_id():
-    pass
+    emp_id = input("Enter the employee's id: ").strip()
+    
+    if emp_id.isdigit():
+        employee = Employee.find_by_id(int(emp_id))
+        if employee:
+            print(employee)
+        else:
+            print(f"Employee {emp_id} not found")
+    else:
+        print("Invalid ID. Please enter a number.")
+
 
 
 def create_employee():
-    pass
+    name = input("Enter the employee's name: ").strip()
+    job_title = input("Enter the employee's job title: ").strip()
+    department_id = input("Enter the employee's department id: ").strip()
+
+    if not name or not job_title:
+        print("Error creating employee: Name and job title must be non-empty strings.")
+        return
+    
+    if not department_id.isdigit():
+        print("Error creating employee: Department ID must be a number.")
+        return
+
+    try:
+        employee = Employee.create(name, job_title, int(department_id))
+        print(f"Success: {employee}")
+    except Exception as e:
+        print(f"Error creating employee: {e}")
+
 
 
 def update_employee():
-    pass
+    emp_id = input("Enter the employee's id: ").strip()
+    
+    if not emp_id.isdigit():
+        print("Invalid ID format. Please enter a number.")
+        return
+    
+    employee = Employee.find_by_id(int(emp_id))
+    
+    if not employee:
+        print(f"Employee {emp_id} not found")
+        return
+
+    new_name = input("Enter the employee's new name: ").strip()
+    new_job_title = input("Enter the employee's new job title: ").strip()
+    new_department_id = input("Enter the employee's new department id: ").strip()
+
+    if not new_name or not new_job_title or not new_department_id.isdigit():
+        print("Error: Invalid input. Name and job title must be non-empty, and department ID must be a number.")
+        return
+
+    try:
+        employee.update(new_name, new_job_title, int(new_department_id))
+        print(f"Success: {employee}")
+    except Exception as e:
+        print(f"Error updating employee: {e}")
 
 
 def delete_employee():
-    pass
+    emp_id = input("Enter the employee's id: ").strip()
+    
+    if not emp_id.isdigit():
+        print("Invalid ID format. Please enter a number.")
+        return
+    
+    employee = Employee.find_by_id(int(emp_id))
+    
+    if not employee:
+        print(f"Employee {emp_id} not found")
+        return
+
+    employee.delete()
+    print(f"Employee {emp_id} deleted")
+
 
 
 def list_department_employees():
-    pass
+    dept_id = input("Enter the department's id: ").strip()
+    
+    if not dept_id.isdigit():
+        print("Invalid department ID. Please enter a number.")
+        return
+    
+    department = Department.find_by_id(int(dept_id))
+    
+    if not department:
+        print(f"Department {dept_id} not found")
+        return
+
+    employees = department.employees()
+    if employees:
+        for emp in employees:
+            print(emp)
+    else:
+        print(f"No employees found in Department {dept_id}")
